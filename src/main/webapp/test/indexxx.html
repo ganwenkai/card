@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>支付后台管理系统</title>
+		<link rel="icon" href="../favicon.ico" size="16*16" type="image/x-icon" />
+	    <link rel="shortcut icon" href="../favicon.ico" size="16*16" type="image/x-icon" />
+	    <link rel="stylesheet" type="text/css" href="easyui/themes/bootstrap/easyui.css">
+		<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css">
+		<link rel="stylesheet" type="text/css" href="easyui/icons/icon-all.min.css">
+		<script type="text/javascript" src="easyui/jquery.min.js"></script>
+		<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	</head>
+	<body>
+		<div id="tb" style="height:auto">
+			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="$('#addPartnerWin').window('open')">添加</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="addPartnerMoney()">充值</a>
+		</div>
+		<div class="easyui-layout hidden" data-options="fit: true" id="container">
+			<div data-options="region:'west'" style="width:800px">
+				<table class="easyui-datagrid" title="合作商信息" style="border:false" id="partnerInfoGrid"
+					data-options="singleSelect:true,iconCls: 'icon-edit',toolbar: '#tb',url:'/cardval/getPartnerInfos.do',method:'get',onClickRow:onClickRow">
+					<thead>
+						<tr>
+							<th data-options="field:'iD_',width:100,hidden:true">主键</th>
+							<th data-options="field:'pARTNER_NO_',width:350">合作商编号</th>
+							<th data-options="field:'pARTNER_NAME_',width:250">合作商名称</th>
+							<th data-options="field:'pARTNER_MONEY_',width:195,align:'right'">合作商余额</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+			<div data-options="region:'center'">
+				<table class="easyui-datagrid" title="最近充值信息" style="height:310px" id="addMoney"
+					data-options="singleSelect:true">
+					<thead>
+						<tr>
+							<th data-options="field:'tRANS_DATE_',width:300" formatter='Common.DateFormatter'>充值时间</th>
+							<th data-options="field:'tRANS_MONEY_',width:200">充值金额</th>
+						</tr>
+					</thead>
+				</table>
+				<table class="easyui-datagrid" title="最近消费信息" style="height:310px" id="mixMoney"
+					data-options="singleSelect:true">
+					<thead>
+						<tr>
+							<th data-options="field:'tRANS_DATE_',width:300" formatter='Common.DateFormatter'>消费时间</th>
+							<th data-options="field:'tRANS_MONEY_',width:200">消费金额</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+		<div id="addPartnerWin" class="easyui-window" title="添加合作商" data-options="iconCls:'icon-save',closed:true" style="width:350px;height:250px;">
+			<div class="easyui-layout" data-options="fit:true">
+				<div data-options="region:'center'" style="padding:10px;">
+					<form id="addPartnerForm" action="addPartnerInfo.do" method="post">
+				    	<table cellpadding="12">
+				    		<tr>
+				    			<td>合作商编号:</td>
+				    			<td><input class="easyui-textbox" type="text" name="PARTNER_NO_" data-options="required:true"></input></td>
+				    		</tr>
+				    		<tr>
+				    			<td>合作商名称:</td>
+				    			<td><input class="easyui-textbox" type="text" name="PARTNER_NAME_" data-options="required:true"></input></td>
+				    		</tr>
+				    		<tr>
+				    			<td>合作商金额:</td>
+				    			<td><input class="easyui-textbox" type="number" name="PARTNER_MONEY_"></input></td>
+				    		</tr>
+				    	</table>
+				    </form>
+				</div>
+				<div data-options="region:'south',border:false" style="text-align:right;padding:5px 0 0;">
+					<a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="addPartner()" style="width:80px">Ok</a>
+					<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="$('#addPartnerWin').window('close')" style="width:80px">Cancel</a>
+				</div>
+			</div>
+		</div>
+		<div id="addPartnerMoneyWin" class="easyui-window" title="合作商充值" data-options="iconCls:'icon-save',closed:true" style="width:500px;height:200px;padding:5px;">
+			<div class="easyui-layout" data-options="fit:true">
+				<div data-options="region:'center'" style="padding:10px;">
+					<form id="addPartnerMoneyForm" action="addPartnerInfo.do" method="post">
+				    	<table cellpadding="12">
+				    		<tr>
+				    			<td>合作商编号:</td>
+				    			<td><input type="text" id="PARTNER_NO_" name="PARTNER_NO_" required></input></td>
+				    		</tr>
+				    		<tr>
+				    			<td>合作商金额:</td>
+				    			<td><input type="number" id="TRANS_MONEY_" name="TRANS_MONEY_"></input></td>
+				    		</tr>
+				    	</table>
+				    </form>
+				</div>
+				<div data-options="region:'south',border:false" style="text-align:right;padding:5px 0 0;">
+					<a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="savePartnerMoney()" style="width:80px">Ok</a>
+					<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="$('#addPartnerMoneyWin').window('close')" style="width:80px">Cancel</a>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		Date.prototype.format = function(format) {  
+		    /* 
+		     * eg:format="yyyy-MM-dd hh:mm:ss"; 
+		     */  
+		    var o = {  
+		        "M+" : this.getMonth() + 1, // month  
+		        "d+" : this.getDate(), // day  
+		        "h+" : this.getHours(), // hour  
+		        "m+" : this.getMinutes(), // minute  
+		        "s+" : this.getSeconds(), // second  
+		        "q+" : Math.floor((this.getMonth() + 3) / 3), // quarter  
+		        "S" : this.getMilliseconds()  
+		        // millisecond  
+		    }  
+		  
+		    if (/(y+)/.test(format)) {  
+		        format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4  
+		                        - RegExp.$1.length));  
+		    }  
+		  
+		    for (var k in o) {  
+		        if (new RegExp("(" + k + ")").test(format)) {  
+		            format = format.replace(RegExp.$1, RegExp.$1.length == 1  
+		                            ? o[k]  
+		                            : ("00" + o[k]).substr(("" + o[k]).length));  
+		        }  
+		    }  
+		    return format;  
+		}
+		var Common = {
+			DateFormatter : function(value, rec, index){
+		        return new Date(value).format("yyyy-MM-dd hh:mm:ss");
+			}	
+		}
+		function onClickRow(a,b){
+			$('#addMoney').datagrid({   
+			    url:'/cardval/test/getPartnerTrans.do?PARTNER_ID_='+b.iD_+'&TRANS_TYPE_=1',
+			    method:'get'
+			});
+			$('#mixMoney').datagrid({   
+			    url:'/cardval/test/getPartnerTrans.do?PARTNER_ID_='+b.iD_+'&TRANS_TYPE_=2',
+			    method:'get'
+			});
+		}
+		function addPartner(){
+			$.ajax({
+                type: "POST",
+                
+                async: false,
+                url:"/cardval/addPartnerInfo.do",
+                data:$('#addPartnerForm').serialize(),// 你的formid
+                error: function(request) {
+                	$.messager.alert('Error',"添加失败");
+                },
+                success: function(data) {
+                	$('#partnerInfoGrid').datagrid({   
+        			    url:'/cardval/getPartnerInfos.do',
+        			    method:'get'
+        			});
+                	$.messager.alert('Info',data.desc);
+                	$('#addPartnerWin').window('close');
+                }
+            });
+		}
+		function addPartnerMoney(){
+			var row = $('#partnerInfoGrid').datagrid('getSelected');
+			if(row == null){
+				$.messager.alert('Error','请选择合作商！');
+			}else{
+				$('#addPartnerMoneyWin').window('open');
+				$("#PARTNER_NO_").val(row.pARTNER_NO_);
+				$("#TRANS_MONEY_").val(0);
+			}
+		}
+		function savePartnerMoney(){
+			$.ajax({
+                type: "POST",
+                dataType :'json',
+                async: false,
+                url:"/cardval/addPartnerMoney.do",
+                data:$('#addPartnerMoneyForm').serialize(),// 你的formid
+                error: function(request) {
+                	$.messager.alert('Error',"添加失败");
+                },
+                success: function(data) {
+                	$('#partnerInfoGrid').datagrid({   
+        			    url:'/cardval/getPartnerInfos.do',
+        			    method:'get'
+        			});
+                	$.messager.alert('Info',data.desc);
+                	$('#addPartnerMoneyWin').window('close');
+                }
+            });
+		}
+	</script>
+</html>
