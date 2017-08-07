@@ -6,7 +6,7 @@
 * @date:2017年8月7日 上午11:35:05
 * @version:V1.0 
 */
-package org.hzzm.cardval.util;
+package org.renne.bankValidation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
-public class HttpUtil {
+public class HttpClientTest {
 	private static RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(60000).build();
 	
 	public static String sendPost(String url, Map<String, String> params) {

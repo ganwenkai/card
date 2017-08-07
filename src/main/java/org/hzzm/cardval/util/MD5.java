@@ -39,7 +39,7 @@ public class MD5 {
 			MessageDigest md5 = MessageDigest.getInstance(ALGORITHM_MD5);
 			byte[] bytes = md5.digest(src.getBytes());//获取消息摘要
 			
-			ret = StringUtil.bytes2HexString(bytes,upcase);//转成16进制字符串小写
+			ret = StringUtil.bytes2HexString(bytes);//转成16进制字符串小写
 			
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block

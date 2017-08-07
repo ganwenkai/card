@@ -27,6 +27,7 @@ import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 import org.hzzm.cardval.util.HttpUtil;
 import org.hzzm.cardval.util.MD5;
+import org.hzzm.cardval.util.MD5Util;
 import org.junit.Test;
 
 
