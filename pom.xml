@@ -131,6 +131,7 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
+                <!-- 部署到Tomcat上添加的密码 -->
                     <path>/${project.artifactId}</path>
                 </configuration>
             </plugin>

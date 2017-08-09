@@ -131,6 +131,8 @@ public class SystemService {
         if (!StringUtil.isEmpty(paramsCard.getCARD_NAME_())) params.put("acct_name", paramsCard.getCARD_NAME_());
         if (!StringUtil.isEmpty(paramsCard.getCARD_MOBILE_())) params.put("phone_num", paramsCard.getCARD_MOBILE_());
         if (!StringUtil.isEmpty(paramsCard.getCARD_IDCARD_())) {
+        	//交易送往银联前，需要进行身份证验证
+        	
             params.put("cert_type", paramsCard.getCARD_IDTYPE_());
             params.put("cert_id", paramsCard.getCARD_IDCARD_());
         }

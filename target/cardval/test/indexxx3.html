@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>test</title>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://www.veryhuo.com/uploads/Common/js/jQuery.md5.js"></script>
+</head>
+<body>
+	<form action="/cardval/validationCard" method="post">
+		<input type="text" placeholder="请输入合作商编号" name="PARTNER_NO_" id="partnerNo" value="1001"><br>
+		<input type="text" placeholder="请输入帐号" name="CARD_NO_" id="cardNo" value="6225768726230772"><br>
+		<input type="text" placeholder="请输入账户名 " name="CARD_NAME_"><br>
+		<input type="text" placeholder="请输入手机号" name="CARD_MOBILE_"><br>
+		<input type="text" placeholder="请输入身份证类型" name="CARD_IDTYPE_" value="01"><br>
+		<input type="text" placeholder="请输入身份证号" name="CARD_IDCARD_"><br>
+		<input type="text" name="SIGN_" id="sign"><br>
+		<input type="submit" value="查询">
+	</form>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#cardNo').blur(function(){
+				var txt = $("#cardNo").val()+"A84632CED6B3BF02"+$("#partnerNo").val();
+				$("#sign").val($.md5(txt));
+			});
+		})
+	</script>
+</body>
+</html>

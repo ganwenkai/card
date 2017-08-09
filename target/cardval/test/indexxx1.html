@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>支付后台管理系统</title>
+		<link rel="icon" href="../favicon.ico" size="16*16" type="image/x-icon" />
+	    <link rel="shortcut icon" href="../favicon.ico" size="16*16" type="image/x-icon" />
+	    <link rel="stylesheet" type="text/css" href="easyui/themes/bootstrap/easyui.css">
+		<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css">
+		<link rel="stylesheet" type="text/css" href="easyui/icons/icon-all.min.css">
+		<script type="text/javascript" src="easyui/jquery.min.js"></script>
+		<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	</head>
+	<body>
+		<div id="tb" style="height:auto">
+			<input type="text" id="cardNo" placeholder="请输入银行卡号">
+			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="loadCardInfos()">查询</a>
+		</div>
+		<div class="easyui-layout hidden" data-options="fit: true" id="container">
+			<div data-options="region:'center'">
+				<table class="easyui-datagrid" title="银行卡信息" style="border:false;height:100%"  id="cardInfoGrid"
+					data-options="singleSelect:true,iconCls: 'icon-edit',toolbar: '#tb'">
+					<thead>
+						<tr>
+							<th data-options="field:'iD_',width:100">主键</th>
+							<th data-options="field:'cARD_NO_',width:200">卡号</th>
+							<th data-options="field:'cARD_NAME_',width:100">持卡人</th>
+							<th data-options="field:'cARD_IDCARD_',width:200">身份证号码</th>
+							<th data-options="field:'cARD_MOBILE_',width:150">手机号码</th>
+							<th data-options="field:'rspCd',width:100">返回码</th>
+							<th data-options="field:'rspDesc',width:200">返回信息</th>
+							<th data-options="field:'down',width:100,align:'center',formatter:removeCard">删除</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		function loadCardInfos(){
+			var cardNo = $("#cardNo").val();
+			$('#cardInfoGrid').datagrid({   
+			    url:'/cardval/getCardInfos.do?cardNo='+cardNo,
+			    method:'get'
+			});
+		}
+		function removeCard(val,row,index){
+			return "<button onclick='removeCardInfo(\""+row.iD_+"\")'>删除</button>";
+			
+		}
+		function removeCardInfo(id){
+			$.ajax({
+                type: "POST",
+                async: false,
+                url:"/cardval/delCardInfos.do",
+                data:{cardId : id},// 你的formid
+                error: function(request) {
+                	$.messager.alert('Error',"删除失败");
+                },
+                success: function(data) {
+                	$.messager.alert('Info',data > 0 ? "删除成功" : "删除失败");
+                	loadCardInfos();
+                }
+            });
+		}
+	</script>
+</html>

@@ -77,6 +77,7 @@ public class StringUtil {
 //    }
     
     /**
+     * MD5摘要加密
      * byte[] 转 16进制字符串
      * 2017-08-04-12:34
      * @param arr

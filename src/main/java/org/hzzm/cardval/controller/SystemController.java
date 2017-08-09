@@ -10,6 +10,7 @@ import org.hzzm.cardval.entity.CardInfo;
 import org.hzzm.cardval.entity.PartnerInfo;
 import org.hzzm.cardval.entity.PartnerTrans;
 import org.hzzm.cardval.entity.Result;
+import org.hzzm.cardval.util.IdcardVerifyUtil;
 import org.hzzm.cardval.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -73,8 +74,14 @@ public class SystemController {
                 paramsCard.setCARD_MOBILE_(cardMobile);//params.put("phone_num", cardMobile);
             //证件类型和证件号码必须同时存在或不存在
             if (!StringUtil.isEmpty(cardIdtype, cardIdcard)) {
-                paramsCard.setCARD_IDTYPE_(cardIdtype);
-                paramsCard.setCARD_IDCARD_(cardIdcard);
+            	
+            	//进行身份证验证上送交易前
+            	if(IdcardVerifyUtil.validate18Idcard(cardIdcard)) {       		
+            		paramsCard.setCARD_IDTYPE_(cardIdtype);
+            		paramsCard.setCARD_IDCARD_(cardIdcard);
+            	}else {
+            		logger.info("Idcard is not right");
+            	}
             }
             result = systemService.validation(paramsCard, partnerNo);
         }
